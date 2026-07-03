@@ -1,0 +1,5 @@
+# 作業用・元データ（サイト公開には不要）
+*.xlsx
+Thumbs.db
+Desktop.ini
+.DS_Store

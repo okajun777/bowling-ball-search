@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026年 最新ボウリングボール検索</title>
+<style>
+  :root{
+    --bg:#f4f6f9;
+    --panel:#ffffff;
+    --ink:#1f2937;
+    --sub:#6b7280;
+    --line:#e5e7eb;
+    --accent:#1d4ed8;
+    --accent-soft:#eef2ff;
+    --low:#2563eb;
+    --mid:#059669;
+    --high:#d97706;
+    --vhigh:#dc2626;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Meiryo UI","Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP",sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+  }
+  header{
+    background:linear-gradient(135deg,#1d4ed8,#1e3a8a);
+    color:#fff;
+    padding:28px 24px 22px;
+  }
+  header h1{
+    margin:0 0 6px;
+    font-size:1.5rem;
+  }
+  header p{
+    margin:0;
+    color:#dbeafe;
+    font-size:0.9rem;
+  }
+  .layout{
+    display:grid;
+    grid-template-columns:300px 1fr;
+    gap:20px;
+    max-width:1280px;
+    margin:20px auto;
+    padding:0 20px 40px;
+    align-items:start;
+  }
+  @media (max-width:880px){
+    .layout{grid-template-columns:1fr;}
+  }
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:18px;
+  }
+  .filters{
+    position:sticky;
+    top:16px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    max-height:calc(100vh - 32px);
+    overflow-y:auto;
+  }
+  .filters h2{
+    font-size:0.95rem;
+    margin:0 0 10px;
+    color:var(--ink);
+    border-bottom:2px solid var(--accent-soft);
+    padding-bottom:6px;
+  }
+  .field{margin-bottom:14px;}
+  .field:last-child{margin-bottom:0;}
+  .field label.title{
+    display:block;
+    font-size:0.8rem;
+    font-weight:600;
+    color:var(--sub);
+    margin-bottom:6px;
+  }
+  input[type="text"], select{
+    width:100%;
+    padding:8px 10px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    font-size:0.9rem;
+    font-family:inherit;
+  }
+  .chipgroup{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+  .chip{
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:999px;
+    padding:5px 12px;
+    font-size:0.78rem;
+    cursor:pointer;
+    user-select:none;
+    color:var(--sub);
+    transition:all .15s;
+  }
+  .chip.active{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:#fff;
+  }
+  .range-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .range-row input[type="number"]{
+    width:80px;
+    padding:6px 8px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    font-size:0.85rem;
+  }
+  .range-row span{color:var(--sub); font-size:0.8rem;}
+  input[type="range"]{width:100%;}
+  .reset-btn{
+    width:100%;
+    padding:9px;
+    border:none;
+    border-radius:8px;
+    background:var(--accent-soft);
+    color:var(--accent);
+    font-weight:600;
+    cursor:pointer;
+    font-size:0.85rem;
+  }
+  .reset-btn:hover{background:#dbe6fe;}
+  .toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .count{
+    font-size:0.95rem;
+    color:var(--sub);
+  }
+  .count strong{color:var(--accent); font-size:1.15rem;}
+  .sort-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:0.85rem;
+    color:var(--sub);
+  }
+  .sort-row select{width:auto;}
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:16px;
+  }
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .card-img{
+    width:100%;
+    aspect-ratio:1/1;
+    border-radius:10px;
+    background:#f1f5f9;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .card-img img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    background:#fff;
+  }
+  .card-img.noimg{
+    flex-direction:column;
+    gap:4px;
+    color:var(--sub);
+  }
+  .card-img.noimg .icon{
+    font-size:1.8rem;
+  }
+  .card-img.noimg .txt{
+    font-size:0.72rem;
+  }
+  .card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:8px;
+  }
+  .card-brand{
+    font-size:0.75rem;
+    color:var(--sub);
+    font-weight:600;
+    letter-spacing:.02em;
+    text-transform:uppercase;
+  }
+  .card-name{
+    font-size:1.05rem;
+    font-weight:700;
+    margin:2px 0 0;
+    line-height:1.3;
+  }
+  .badge{
+    display:inline-block;
+    padding:3px 9px;
+    border-radius:999px;
+    font-size:0.72rem;
+    font-weight:700;
+    color:#fff;
+    white-space:nowrap;
+  }
+  .badge.低め{background:var(--low);}
+  .badge.中間{background:var(--mid);}
+  .badge.高め{background:var(--high);}
+  .badge.かなり高い{background:var(--vhigh);}
+  .meta-row{
+    font-size:0.8rem;
+    color:var(--sub);
+  }
+  .stage-wrap{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    background:#f8fafc;
+    border-radius:8px;
+    padding:10px 12px;
+    margin-top:2px;
+  }
+  .stage-block{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+  }
+  .stage-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    font-size:0.76rem;
+    color:var(--sub);
+    font-weight:600;
+  }
+  .stage-head .stage-val{
+    font-weight:700;
+    color:var(--ink);
+    font-size:0.88rem;
+  }
+  .stage-bar{
+    display:flex;
+    gap:3px;
+  }
+  .stage-seg{
+    flex:1;
+    height:7px;
+    border-radius:3px;
+    background:#e2e8f0;
+  }
+  .stage-foot{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:0.68rem;
+    color:var(--sub);
+  }
+  .stage-tag{
+    font-weight:700;
+    font-size:0.72rem;
+    color:var(--ink);
+  }
+  .mb-row{
+    font-size:0.75rem;
+    color:var(--sub);
+  }
+  .mb-row b{font-weight:600; color:var(--ink);}
+  .cover-line{
+    font-size:0.82rem;
+    color:var(--ink);
+  }
+  .cover-line b{font-weight:600;}
+  .memo{
+    font-size:0.8rem;
+    color:var(--sub);
+    line-height:1.5;
+    border-top:1px dashed var(--line);
+    padding-top:8px;
+  }
+  .card-foot{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:auto;
+  }
+  .core-tag{
+    font-size:0.72rem;
+    color:var(--accent);
+    background:var(--accent-soft);
+    padding:3px 8px;
+    border-radius:6px;
+  }
+  .src-link{
+    font-size:0.75rem;
+    color:var(--accent);
+    text-decoration:none;
+  }
+  .src-link:hover{text-decoration:underline;}
+  .empty{
+    text-align:center;
+    padding:60px 20px;
+    color:var(--sub);
+  }
+  footer{
+    text-align:center;
+    padding:20px;
+    color:var(--sub);
+    font-size:0.75rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎳 2026年 最新ボウリングボール検索</h1>
+  <p>2026年発売ボール97件のスペックから、条件に合う候補を絞り込んで比較できます。（出典: bowwwl.com Bowling Ball Database ほか）</p>
+</header>
+
+<div class="layout">
+  <aside class="panel filters">
+    <div class="field">
+      <label class="title">キーワード検索</label>
+      <input type="text" id="keyword" placeholder="ボール名・カバー名・コア名など">
+    </div>
+
+    <div>
+      <h2>ブランド</h2>
+      <div class="chipgroup" id="brandChips"></div>
+    </div>
+
+    <div>
+      <h2>発売月</h2>
+      <div class="chipgroup" id="monthChips"></div>
+    </div>
+
+    <div>
+      <h2>カバー種類</h2>
+      <div class="chipgroup" id="coverChips"></div>
+    </div>
+
+    <div>
+      <h2>コア種別</h2>
+      <div class="chipgroup" id="coreChips"></div>
+    </div>
+
+    <div>
+      <h2>RG（転がり出し）</h2>
+      <div class="field">
+        <div class="range-row">
+          <input type="number" step="0.001" id="rgMin">
+          <span>〜</span>
+          <input type="number" step="0.001" id="rgMax">
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h2>Diff（曲がり幅）</h2>
+      <div class="field">
+        <div class="range-row">
+          <input type="number" step="0.001" id="diffMin">
+          <span>〜</span>
+          <input type="number" step="0.001" id="diffMax">
+        </div>
+      </div>
+    </div>
+
+    <button class="reset-btn" id="resetBtn">条件をリセット</button>
+  </aside>
+
+  <main>
+    <div class="toolbar">
+      <div class="count"><strong id="resultCount">0</strong> 件ヒット / 全<span id="totalCount">0</span>件</div>
+      <div class="sort-row">
+        並び替え:
+        <select id="sortSelect">
+          <option value="month-desc">発売月が新しい順</option>
+          <option value="month-asc">発売月が古い順</option>
+          <option value="diff-desc">Diffが大きい順</option>
+          <option value="diff-asc">Diffが小さい順</option>
+          <option value="rg-asc">RGが低い順</option>
+          <option value="rg-desc">RGが高い順</option>
+          <option value="name-asc">ボール名（A→Z）</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="emptyMsg" style="display:none;">条件に一致するボールが見つかりませんでした。フィルターを見直してください。</div>
+  </main>
+</div>
+
+<footer>データ作成日: 2026-07-04 / 主要ソース: bowwwl.com Bowling Ball Database、bowlersmart.com（2026年発売分・8月は発売予定情報を含みます）<br>商品画像は各メーカー・小売サイト（bowlingball.com、brunswickbowling.com、hammerbowling.com、swagbowling.com 他）から参照表示しています。一部のボールは画像が見つかっていません。</footer>
+
+<script>
+const BALLS = [{"releaseMonth": "2026-08", "brand": "Brunswick", "ballName": "Combat Solid", "coverName": "HK22C2 - Alpha Premier ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "500/1500 シアエア・マイクロパッド", "coreName": "Rampart", "coreType": "非対称コア", "rg": 2.502, "diff": 0.051, "mb": 0.019, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり / 非対称の向き変わり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowlersparadise.com/cdn/shop/files/Brunswick-Combat-Solid-Bowling-Ball_1_600x.png?v=1782977851", "rgClass": "早め", "rgLevel": 2, "diffLevel": 3}, {"releaseMonth": "2026-08", "brand": "Brunswick", "ballName": "Warning Alert", "coverName": "HK22 - Savvy Hook ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "500/1000/1500 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Alert", "coreType": "対称コア", "rg": 2.478, "diff": 0.037, "mb": null, "diffClass": "中間", "memo": "転がり出し早め / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://brunswickbowling.nyc3.cdn.digitaloceanspaces.com/production/bowler_products/Products/Balls/High/Warning_Alert_1600x1600.png", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 2}, {"releaseMonth": "2026-08", "brand": "DV8", "ballName": "Intense Collision", "coverName": "HK22C2 - Havoc パール", "coverType": "パール・リアクティブ", "finish": "500/1000/1500 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Collision", "coreType": "非対称コア", "rg": 2.462, "diff": 0.052, "mb": 0.019, "diffClass": "高め", "memo": "転がり出し早め / 曲がり幅あり / 非対称の向き変わり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowlersparadise.com/cdn/shop/files/DV8-Intense-Collision-Bowling-Ball_1_600x.png?v=1783001070", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 3}, {"releaseMonth": "2026-08", "brand": "Radical", "ballName": "Evil Eye Pearl", "coverName": "HK22C パール", "coverType": "パール・リアクティブ", "finish": "500/1000/1500 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Evil Eye", "coreType": "対称コア", "rg": 2.495, "diff": 0.046, "mb": null, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/17963.jpg", "rgClass": "早め", "rgLevel": 2, "diffLevel": 3}, {"releaseMonth": "2026-08", "brand": "Radical", "ballName": "Intel Tour", "coverName": "Hyper Control ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "500/1500 シアエア・マイクロパッド", "coreName": "Modified Intel", "coreType": "対称コア", "rg": 2.483, "diff": 0.032, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowlersparadise.com/cdn/shop/files/Radical-Intel-Tour-Bowling-Ball_1_600x.png?v=1783006601", "rgClass": "早め", "rgLevel": 2, "diffLevel": 2}, {"releaseMonth": "2026-08", "brand": "Track", "ballName": "Theorem Delta", "coverName": "HK22 - Super Response ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "500/1000/1500 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "MC2", "coreType": "非対称コア", "rg": 2.473, "diff": 0.046, "mb": 0.017, "diffClass": "高め", "memo": "転がり出し早め / 曲がり幅あり / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowlersparadise.com/cdn/shop/files/Track-Theorem-Delta-Bowling-Ball_2000x.png", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 3}, {"releaseMonth": "2026-08", "brand": "Roto Grip", "ballName": "Wicked Gremlin", "coverName": "G-R1 ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "2000 アブラロン", "coreName": "Rondure MaxD", "coreType": "非対称コア", "rg": 2.5, "diff": 0.058, "mb": 0.01, "diffClass": "かなり高い", "memo": "標準〜中間 / フレア大・曲がり強め / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowlersparadise.com/cdn/shop/files/Roto_Grip_WickedGremlin2_Bowling-Ball_600x.png?v=1782937557", "rgClass": "早め", "rgLevel": 2, "diffLevel": 4}, {"releaseMonth": "2026-08", "brand": "Storm", "ballName": "!Q Tour Sapphire", "coverName": "R2S パール", "coverType": "パール・リアクティブ", "finish": "パワーエッジ仕上げ", "coreName": "C3 Centripetal Control", "coreType": "対称コア", "rg": 2.49, "diff": 0.029, "mb": null, "diffClass": "低め", "memo": "標準〜中間 / 曲がり控えめ", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowlersparadise.com/cdn/shop/files/Storm_Q_TourSapphireBowlingBall_71c7de67-be95-432c-a0cb-1cebe83d9974_2000x.png", "rgClass": "早め", "rgLevel": 2, "diffLevel": 1}, {"releaseMonth": "2026-07", "brand": "Brunswick", "ballName": "Fury Emerald/Black Hybrid", "coverName": "PK-26 ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "500/1000/2000 シアエア・マイクロパッド", "coreName": "Fury", "coreType": "対称コア", "rg": 2.524, "diff": 0.038, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowlersparadise.com/cdn/shop/files/Brunswick-Fury-Emerald-Black-Bowling-Ball_2_600x.png?v=1782919397", "rgClass": "標準", "rgLevel": 3, "diffLevel": 2}, {"releaseMonth": "2026-07", "brand": "Brunswick", "ballName": "Fury Purple/Blue Hybrid", "coverName": "PK-26 ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "500/1000/2000 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Fury", "coreType": "対称コア", "rg": 2.524, "diff": 0.038, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowlersparadise.com/cdn/shop/files/Brunswick-Fury-Purple-Blue-Bowling-Ball_2_600x.png?v=1782924265", "rgClass": "標準", "rgLevel": 3, "diffLevel": 2}, {"releaseMonth": "2026-07", "brand": "Brunswick", "ballName": "Fury Red/Blue/Black Hybrid", "coverName": "PK-26 ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "500/1000/2000 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Fury", "coreType": "対称コア", "rg": 2.524, "diff": 0.038, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowlersparadise.com/cdn/shop/files/Brunswick-Fury-Red-Blue-Black-Bowling-Ball_3_600x.png?v=1782925259", "rgClass": "標準", "rgLevel": 3, "diffLevel": 2}, {"releaseMonth": "2026-07", "brand": "Brunswick", "ballName": "Fury Orange/Red Pearl", "coverName": "PK-26 パール", "coverType": "パール・リアクティブ", "finish": "500/1000/2000 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Fury", "coreType": "対称コア", "rg": 2.524, "diff": 0.038, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowlersparadise.com/cdn/shop/files/Brunswick-Fury-Orange-Red-Bowling-Ball_3_600x.png?v=1782920643", "rgClass": "標準", "rgLevel": 3, "diffLevel": 2}, {"releaseMonth": "2026-07", "brand": "Brunswick", "ballName": "Fury Pink/Ice/Silver Pearl", "coverName": "PK-26 パール", "coverType": "パール・リアクティブ", "finish": "500/1000/2000 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Fury", "coreType": "対称コア", "rg": 2.524, "diff": 0.038, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowlersparadise.com/cdn/shop/files/Brunswick-Fury-Pink-Ice-Silver-Bowling-Ball_1_600x.png?v=1782923571", "rgClass": "標準", "rgLevel": 3, "diffLevel": 2}, {"releaseMonth": "2026-07", "brand": "Ebonite", "ballName": "Spartan Pearl", "coverName": "HK22C2 - Optimize パール", "coverType": "パール・リアクティブ", "finish": "500/1000/1500 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Iron Fist V2", "coreType": "非対称コア", "rg": 2.473, "diff": 0.053, "mb": 0.019, "diffClass": "高め", "memo": "転がり出し早め / 曲がり幅あり / 非対称の向き変わり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18380.jpg", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 3}, {"releaseMonth": "2026-07", "brand": "Hammer", "ballName": "Deep Ocean Vibe", "coverName": "HK22 - CT Reactive Plus", "coverType": "パール・リアクティブ", "finish": "500/1000/2000 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Vibe", "coreType": "対称コア", "rg": 2.51, "diff": 0.042, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://hammerbowling.com/cdn/shop/files/Deep_Ocean_VIBE_1600x1707_website.png", "rgClass": "早め", "rgLevel": 2, "diffLevel": 2}, {"releaseMonth": "2026-07", "brand": "Hammer", "ballName": "Fallout", "coverName": "HK22C2 ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "500/2000 シアエア・マイクロパッド", "coreName": "Aftermath", "coreType": "対称コア", "rg": 2.52, "diff": 0.052, "mb": null, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://hammerbowling.com/cdn/shop/files/Fallout_1600x1707_website.png", "rgClass": "標準", "rgLevel": 3, "diffLevel": 3}, {"releaseMonth": "2026-07", "brand": "Radical", "ballName": "No Doubt Hybrid", "coverName": "Advantage Plus ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "500/1000/3000 シアエア・マイクロパッド", "coreName": "No Doubt", "coreType": "対称コア", "rg": 2.485, "diff": 0.051, "mb": null, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/17715.jpg", "rgClass": "早め", "rgLevel": 2, "diffLevel": 3}, {"releaseMonth": "2026-07", "brand": "Roto Grip", "ballName": "Transform Pearl", "coverName": "MicroTrax パール", "coverType": "パール・リアクティブ", "finish": "パワーエッジ仕上げ", "coreName": "Morph-Wing", "coreType": "非対称コア", "rg": 2.51, "diff": 0.051, "mb": 0.015, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18348.jpg", "rgClass": "早め", "rgLevel": 2, "diffLevel": 3}, {"releaseMonth": "2026-07", "brand": "Roto Grip", "ballName": "hyped UP!", "coverName": "V-R1 ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "4000 アブラロン", "coreName": "hyped UP", "coreType": "対称コア", "rg": 2.5, "diff": 0.042, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowlersparadise.com/cdn/shop/files/Roto-Grip-hyped-UP-Bowling-Ball_1_600x.png?v=1781894459", "rgClass": "早め", "rgLevel": 2, "diffLevel": 2}, {"releaseMonth": "2026-07", "brand": "Motiv", "ballName": "Sigma Tour Pearl", "coverName": "Atomic Propulsion パール", "coverType": "パール・リアクティブ", "finish": "5000 LSS", "coreName": "Sigma", "coreType": "対称コア", "rg": 2.47, "diff": 0.047, "mb": null, "diffClass": "高め", "memo": "転がり出し早め / 曲がり幅あり", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowwwl.com/sites/default/files/styles/ball_image_main/public/balls/motiv-sigma-tour-pearl.png", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 3}, {"releaseMonth": "2026-06", "brand": "900 Global", "ballName": "Viking Conquest", "coverName": "Reserve Blend 94 ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "2000 アブラロン", "coreName": "Strobe A.I.", "coreType": "非対称コア", "rg": 2.51, "diff": 0.052, "mb": 0.016, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18358.jpg", "rgClass": "早め", "rgLevel": 2, "diffLevel": 3}, {"releaseMonth": "2026-06", "brand": "900 Global", "ballName": "Vengeance Returns", "coverName": "Reserve Blend 91 ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "パワーエッジ仕上げ", "coreName": "Blast A.I.", "coreType": "対称コア", "rg": 2.47, "diff": 0.055, "mb": null, "diffClass": "かなり高い", "memo": "転がり出し早め / フレア大・曲がり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18359.jpg", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 4}, {"releaseMonth": "2026-06", "brand": "Roto Grip", "ballName": "Hustle SOS", "coverName": "VTC ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "4000 アブラロン", "coreName": "Hustle", "coreType": "対称コア", "rg": 2.53, "diff": 0.03, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18360.jpg", "rgClass": "標準", "rgLevel": 3, "diffLevel": 2}, {"releaseMonth": "2026-06", "brand": "Roto Grip", "ballName": "Hustle VP", "coverName": "VTC パール", "coverType": "パール・リアクティブ", "finish": "パワーエッジ仕上げ", "coreName": "Hustle", "coreType": "対称コア", "rg": 2.53, "diff": 0.03, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18361.jpg", "rgClass": "標準", "rgLevel": 3, "diffLevel": 2}, {"releaseMonth": "2026-06", "brand": "Storm", "ballName": "Concept Purple", "coverName": "ARC パール", "coverType": "パール・リアクティブ", "finish": "1000 アブラロン", "coreName": "Radius", "coreType": "対称コア", "rg": 2.61, "diff": 0.02, "mb": null, "diffClass": "低め", "memo": "手前が走りやすく奥まで行きやすい / 曲がり控えめ", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18001.jpg", "rgClass": "遅い", "rgLevel": 5, "diffLevel": 1}, {"releaseMonth": "2026-06", "brand": "Storm", "ballName": "PhysiX Genesis", "coverName": "A2S ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "3000 アブラロン", "coreName": "Atomic A.I.", "coreType": "非対称コア", "rg": 2.47, "diff": 0.055, "mb": 0.018, "diffClass": "かなり高い", "memo": "転がり出し早め / フレア大・曲がり強め / 非対称の向き変わり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowwwl.com/sites/default/files/styles/ball_image_main/public/balls/storm-physix-genesis.png", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 4}, {"releaseMonth": "2026-06", "brand": "Motiv", "ballName": "Frenzy", "coverName": "Vitality", "coverType": "パール・リアクティブ", "finish": "5500 LSP", "coreName": "Excel", "coreType": "対称コア", "rg": 2.57, "diff": 0.03, "mb": null, "diffClass": "中間", "memo": "手前が走りやすく奥まで行きやすい / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": null, "rgClass": "やや遅め", "rgLevel": 4, "diffLevel": 2}, {"releaseMonth": "2026-06", "brand": "Brunswick", "ballName": "Infinity Quest Pearl", "coverName": "HK22C - EVO パール", "coverType": "パール・リアクティブ", "finish": "500/1000/1500 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Infinity", "coreType": "非対称コア", "rg": 2.521, "diff": 0.051, "mb": 0.01, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://brunswickbowling.nyc3.cdn.digitaloceanspaces.com/production/bowler_products/Products/Balls/High/Infinity_Quest_Pearl_1600x1600.png", "rgClass": "標準", "rgLevel": 3, "diffLevel": 3}, {"releaseMonth": "2026-06", "brand": "DV8", "ballName": "Heckler Taunt", "coverName": "Maximum Havoc ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "500/1000/2000 シアエア・マイクロパッド", "coreName": "Unholy", "coreType": "非対称コア", "rg": 2.504, "diff": 0.051, "mb": 0.01, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://dv8bowling.nyc3.cdn.digitaloceanspaces.com/production/bowler_products/Products/Balls/DV8/SSSSSS/Heckler_Taunt_1600x1600.png", "rgClass": "早め", "rgLevel": 2, "diffLevel": 3}, {"releaseMonth": "2026-06", "brand": "Radical", "ballName": "Guru Oracle Pearl", "coverName": "HK22C+ パール", "coverType": "パール・リアクティブ", "finish": "500/1000/1500 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Guru", "coreType": "非対称コア", "rg": 2.503, "diff": 0.044, "mb": 0.018, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい / 非対称の向き変わり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18352.jpg", "rgClass": "早め", "rgLevel": 2, "diffLevel": 2}, {"releaseMonth": "2026-06", "brand": "Track", "ballName": "Paragon Fire", "coverName": "HK22C2 - Prime Response ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "500/2000 シアエア・マイクロパッド", "coreName": "I-Core 3.0", "coreType": "非対称コア", "rg": 2.486, "diff": 0.056, "mb": 0.015, "diffClass": "かなり高い", "memo": "標準〜中間 / フレア大・曲がり強め / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowwwl.com/sites/default/files/styles/ball_image_main/public/balls/track-paragon-fire.png", "rgClass": "早め", "rgLevel": 2, "diffLevel": 4}, {"releaseMonth": "2026-06", "brand": "Motiv", "ballName": "Covert VIP ExJ", "coverName": "Leverage HFS", "coverType": "ソリッド・リアクティブ", "finish": "4000 LSS", "coreName": "Vanquish/Quadfire", "coreType": "対称コア", "rg": 2.47, "diff": 0.056, "mb": null, "diffClass": "かなり高い", "memo": "転がり出し早め / フレア大・曲がり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowwwl.com/sites/default/files/styles/ball_image_main/public/balls/motiv-covert-vip-exj-vip-logo.png", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 4}, {"releaseMonth": "2026-05", "brand": "Storm", "ballName": "Alpha Crux", "coverName": "GI-26 ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "2000 アブラロン", "coreName": "Catalyst A.I.", "coreType": "非対称コア", "rg": 2.48, "diff": 0.053, "mb": 0.018, "diffClass": "高め", "memo": "転がり出し早め / 曲がり幅あり / 非対称の向き変わり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowwwl.com/sites/default/files/styles/ball_image_main/public/balls/storm-alpha-crux-2026.png", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 3}, {"releaseMonth": "2026-05", "brand": "Storm", "ballName": "Level Up", "coverName": "RPM-XT ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "1000 アブラロン", "coreName": "Equalizer A.I.", "coreType": "対称コア", "rg": 2.59, "diff": 0.027, "mb": null, "diffClass": "低め", "memo": "手前が走りやすく奥まで行きやすい / 曲がり控えめ", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowwwl.com/sites/default/files/styles/ball_image_main/public/balls/storm-level.png", "rgClass": "やや遅め", "rgLevel": 4, "diffLevel": 1}, {"releaseMonth": "2026-05", "brand": "Storm", "ballName": "Raging Bite", "coverName": "TX-16 ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "3000 アブラロン", "coreName": "G2 A.I.", "coreType": "非対称コア", "rg": 2.46, "diff": 0.059, "mb": 0.029, "diffClass": "かなり高い", "memo": "転がり出し早め / フレア大・曲がり強め / 非対称の向き変わり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": null, "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 4}, {"releaseMonth": "2026-05", "brand": "900 Global", "ballName": "Perfect Reality", "coverName": "S84 Beta ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "パワーエッジ仕上げ", "coreName": "Disturbance AI", "coreType": "非対称コア", "rg": 2.48, "diff": 0.054, "mb": 0.019, "diffClass": "高め", "memo": "転がり出し早め / 曲がり幅あり / 非対称の向き変わり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": null, "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 3}, {"releaseMonth": "2026-05", "brand": "Storm", "ballName": "Code Crush", "coverName": "R2S DEEP パール", "coverType": "パール・リアクティブ", "finish": "パワーエッジ仕上げ", "coreName": "RAD4", "coreType": "非対称コア", "rg": 2.5, "diff": 0.058, "mb": 0.02, "diffClass": "かなり高い", "memo": "標準〜中間 / フレア大・曲がり強め / 非対称の向き変わり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": null, "rgClass": "早め", "rgLevel": 2, "diffLevel": 4}, {"releaseMonth": "2026-05", "brand": "Hammer", "ballName": "X Twelve Black P", "coverName": "HK22 - Aggressive パール", "coverType": "パール・リアクティブ", "finish": "500 シアエア, クラウン・ファクトリー・コンパウンド, クラウン・ファクトリー・ポリッシュ", "coreName": "Vibe 2.0", "coreType": "対称コア", "rg": 2.51, "diff": 0.042, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowwwl.com/sites/default/files/styles/ball_image_main/public/balls/hammer-x-twelve-black-p.png", "rgClass": "早め", "rgLevel": 2, "diffLevel": 2}, {"releaseMonth": "2026-05", "brand": "Ebonite", "ballName": "Turbo X NU", "coverName": "NU Active", "coverType": "非ウレタン系", "finish": "500/1000 シアエア・マイクロパッド", "coreName": "Turbo (2025+)", "coreType": "対称コア", "rg": 2.517, "diff": 0.04, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい / 短め・高摩擦レーンで制御しやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18241.jpg", "rgClass": "標準", "rgLevel": 3, "diffLevel": 2}, {"releaseMonth": "2026-05", "brand": "Hammer", "ballName": "Raw Hammer Black/Grey", "coverName": "Juiced ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "500/1500/3000 シアエア・マイクロパッド", "coreName": "Raw Hammer (2021)", "coreType": "対称コア", "rg": 2.537, "diff": 0.038, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://hammerbowling.com/cdn/shop/files/Raw_Hammer_Black_Grey_2026_1600x1600_8a438ff0-397c-4b16-a4b2-ee6bb3eac8c3.png", "rgClass": "標準", "rgLevel": 3, "diffLevel": 2}, {"releaseMonth": "2026-05", "brand": "Hammer", "ballName": "Raw Hammer Red/White/Purple", "coverName": "Juiced パール", "coverType": "パール・リアクティブ", "finish": "500/1000/2000 シアエア, クラウン・ファクトリー・ポリッシュ", "coreName": "Raw Hammer (2021)", "coreType": "対称コア", "rg": 2.537, "diff": 0.038, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://hammerbowling.com/cdn/shop/files/Raw_Hammer_Red_White_Purple_2026_1600x1707_website.png", "rgClass": "標準", "rgLevel": 3, "diffLevel": 2}, {"releaseMonth": "2026-05", "brand": "Hammer", "ballName": "Spawn", "coverName": "HK22C2 ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "500/1000 シアエア・マイクロパッド", "coreName": "Gauntlet", "coreType": "非対称コア", "rg": 2.501, "diff": 0.05, "mb": 0.012, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowwwl.com/sites/default/files/styles/ball_image_main/public/balls/hammer-spawn.png", "rgClass": "早め", "rgLevel": 2, "diffLevel": 3}, {"releaseMonth": "2026-05", "brand": "SWAG", "ballName": "Archive 2.0", "coverName": "M56 パール", "coverType": "パール・リアクティブ", "finish": "3000 サンディング仕上げ", "coreName": "Archive", "coreType": "非対称コア", "rg": 2.557, "diff": 0.051, "mb": 0.036, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり / 非対称の向き変わり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowlersmart.com/wp-content/uploads/2026/04/7f3011e090d7589acd04f0404243b1d8.png", "rgClass": "やや遅め", "rgLevel": 4, "diffLevel": 3}, {"releaseMonth": "2026-05", "brand": "Hammer", "ballName": "Black Widow Toxin Pearl", "coverName": "Hyper Aggression Plus パール", "coverType": "パール・リアクティブ", "finish": "500/1000/1500 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Gas Mask", "coreType": "非対称コア", "rg": 2.5, "diff": 0.058, "mb": 0.016, "diffClass": "かなり高い", "memo": "標準〜中間 / フレア大・曲がり強め / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowwwl.com/sites/default/files/styles/ball_image_main/public/balls/hammer-black-widow-toxin-pearl.png", "rgClass": "早め", "rgLevel": 2, "diffLevel": 4}, {"releaseMonth": "2026-05", "brand": "Storm", "ballName": "Monsoon", "coverName": "Reactor ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "2000 アブラロン", "coreName": "Atmos A.I.", "coreType": "対称コア", "rg": 2.53, "diff": 0.042, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowwwl.com/sites/default/files/styles/ball_image_main/public/balls/storm-monsoon.png", "rgClass": "標準", "rgLevel": 3, "diffLevel": 2}, {"releaseMonth": "2026-05", "brand": "Storm", "ballName": "Rocket A.I.", "coverName": "A1S パール", "coverType": "パール・リアクティブ", "finish": "パワーエッジ仕上げ", "coreName": "Booster A.I.", "coreType": "対称コア", "rg": 2.53, "diff": 0.048, "mb": null, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowwwl.com/sites/default/files/styles/ball_grid/public/balls/storm-rocket-ai.png", "rgClass": "標準", "rgLevel": 3, "diffLevel": 3}, {"releaseMonth": "2026-04", "brand": "900 Global", "ballName": "Gear Mark", "coverName": "Reserve Blend 93 パール", "coverType": "パール・リアクティブ", "finish": "パワーエッジ仕上げ", "coreName": "Identity A.I.", "coreType": "非対称コア", "rg": 2.47, "diff": 0.056, "mb": 0.025, "diffClass": "かなり高い", "memo": "転がり出し早め / フレア大・曲がり強め / 非対称の向き変わり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": null, "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 4}, {"releaseMonth": "2026-04", "brand": "900 Global", "ballName": "Honey Badger Wine Pearl", "coverName": "Reserve Blend 70E パール", "coverType": "パール・リアクティブ", "finish": "パワーエッジ仕上げ", "coreName": "Grapnel 2.0 A.I.", "coreType": "非対称コア", "rg": 2.53, "diff": 0.05, "mb": 0.013, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": null, "rgClass": "標準", "rgLevel": 3, "diffLevel": 3}, {"releaseMonth": "2026-04", "brand": "Storm", "ballName": "Ghost Lock SE", "coverName": "NeX+ ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "1500 ポリッシュ仕上げ", "coreName": "RAD-X", "coreType": "非対称コア", "rg": 2.48, "diff": 0.054, "mb": 0.018, "diffClass": "高め", "memo": "転がり出し早め / 曲がり幅あり / 非対称の向き変わり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowwwl.com/sites/default/files/styles/ball_image_main/public/balls/storm-ghost-lock-se.png", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 3}, {"releaseMonth": "2026-04", "brand": "Motiv", "ballName": "Venom Hysteria", "coverName": "Propulsion MXV (Maximum Versatility) パール", "coverType": "パール・リアクティブ", "finish": "5000 LSS", "coreName": "Gear", "coreType": "対称コア", "rg": 2.48, "diff": 0.034, "mb": null, "diffClass": "中間", "memo": "転がり出し早め / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18171.jpg", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 2}, {"releaseMonth": "2026-04", "brand": "Brunswick", "ballName": "Strategy", "coverName": "HK22C2 - EVO パール", "coverType": "パール・リアクティブ", "finish": "500/1000/1500 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Dual Centric", "coreType": "非対称コア", "rg": 2.509, "diff": 0.047, "mb": 0.016, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://brunswickbowling.nyc3.cdn.digitaloceanspaces.com/production/bowler_products/Products/Balls/Pro/Strategy_1600x1600.png", "rgClass": "早め", "rgLevel": 2, "diffLevel": 3}, {"releaseMonth": "2026-04", "brand": "Radical", "ballName": "Revenge Pearl", "coverName": "HK22 パール", "coverType": "パール・リアクティブ", "finish": "500/1000/1500 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Sneak Attack", "coreType": "対称コア", "rg": 2.544, "diff": 0.036, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18174.jpg", "rgClass": "やや遅め", "rgLevel": 4, "diffLevel": 2}, {"releaseMonth": "2026-04", "brand": "Radical", "ballName": "Revenge Solid", "coverName": "HK22 ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "500/1000/1500 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Sneak Attack", "coreType": "対称コア", "rg": 2.544, "diff": 0.036, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18173.jpg", "rgClass": "やや遅め", "rgLevel": 4, "diffLevel": 2}, {"releaseMonth": "2026-04", "brand": "Track", "ballName": "Kinetic Sapphire Ice", "coverName": "HK22 - Prime Response パール", "coverType": "パール・リアクティブ", "finish": "500/1000/1500 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Shuttle", "coreType": "非対称コア", "rg": 2.48, "diff": 0.04, "mb": 0.005, "diffClass": "中間", "memo": "転がり出し早め / 扱いやすい / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18182.jpg", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 2}, {"releaseMonth": "2026-04", "brand": "Storm", "ballName": "Norm Duke Clear", "coverName": "Ultra Clear ポリエステル", "coverType": "ポリエステル", "finish": "3500 ポリッシュ仕上げ", "coreName": "Hex", "coreType": "対称コア", "rg": 2.66, "diff": 0.018, "mb": null, "diffClass": "低め", "memo": "手前が走りやすく奥まで行きやすい / 曲がり控えめ / スペア向け", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://assets.1.commercebuild.com/d186dcd2044cf54d8e48876defef4907/contents/BBPVND/BBPVND@1.png", "rgClass": "遅い", "rgLevel": 5, "diffLevel": 1}, {"releaseMonth": "2026-04", "brand": "Ebonite", "ballName": "Wolf Blaze", "coverName": "HK22 - XL7900 ソリッド Plus", "coverType": "ソリッド・リアクティブ", "finish": "500/1000/1500 シアエア・マイクロパッド", "coreName": "Wolf", "coreType": "対称コア", "rg": 2.483, "diff": 0.049, "mb": null, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowwwl.com/sites/default/files/styles/ball_image_main/public/balls/ebonite-wolf-blaze.png", "rgClass": "早め", "rgLevel": 2, "diffLevel": 3}, {"releaseMonth": "2026-03", "brand": "DV8", "ballName": "Double Trouble", "coverName": "HK22 - Havoc パール", "coverType": "パール・リアクティブ", "finish": "500/1000/1500 シアエア・マイクロパッド", "coreName": "Dualistic", "coreType": "対称コア", "rg": 2.496, "diff": 0.045, "mb": null, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://dv8bowling.nyc3.cdn.digitaloceanspaces.com/production/bowler_products/Products/Balls/DV8/SSSSS/Double_Trouble_1600x1600.png", "rgClass": "早め", "rgLevel": 2, "diffLevel": 3}, {"releaseMonth": "2026-03", "brand": "Ebonite", "ballName": "Game Breaker 5 Hybrid", "coverName": "HK22 - GB 12.7 ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "500/2000 シアエア・マイクロパッド", "coreName": "Enhanced V2", "coreType": "対称コア", "rg": 2.48, "diff": 0.048, "mb": null, "diffClass": "高め", "memo": "転がり出し早め / 曲がり幅あり", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18150.jpg", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 3}, {"releaseMonth": "2026-03", "brand": "Hammer", "ballName": "Full Effect", "coverName": "HK22C2 ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "500/1000/1500 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Huntsman", "coreType": "非対称コア", "rg": 2.47, "diff": 0.05, "mb": 0.017, "diffClass": "高め", "memo": "転がり出し早め / 曲がり幅あり / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://hammerbowling.com/cdn/shop/files/Hammer_Full_Effect_1600x1707_website.png", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 3}, {"releaseMonth": "2026-03", "brand": "Hammer", "ballName": "Purple Pearl Urethane 78D", "coverName": "ウレタン パール 78D", "coverType": "パール・ウレタン", "finish": "500 シアエア・マイクロパッド", "coreName": "Super LED", "coreType": "対称コア", "rg": 2.632, "diff": 0.034, "mb": null, "diffClass": "中間", "memo": "手前が走りやすく奥まで行きやすい / 扱いやすい / 短め・高摩擦レーンで制御しやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://hammerbowling.com/cdn/shop/files/Purple_Pearl_Urethane_78D_CG_1600x1707_website.png", "rgClass": "遅い", "rgLevel": 5, "diffLevel": 2}, {"releaseMonth": "2026-03", "brand": "Radical", "ballName": "Vexed", "coverName": "HK22C+ ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "500/1000/3000 シアエア・マイクロパッド", "coreName": "Vexed", "coreType": "非対称コア", "rg": 2.498, "diff": 0.036, "mb": 0.012, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18151.jpg", "rgClass": "早め", "rgLevel": 2, "diffLevel": 2}, {"releaseMonth": "2026-03", "brand": "Motiv", "ballName": "Supra Sport", "coverName": "Leverage MFS", "coverType": "ソリッド・リアクティブ", "finish": "4000 LSS", "coreName": "Quadfire", "coreType": "対称コア", "rg": 2.55, "diff": 0.043, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18073.jpg", "rgClass": "やや遅め", "rgLevel": 4, "diffLevel": 2}, {"releaseMonth": "2026-03", "brand": "Ebonite", "ballName": "The One Giant", "coverName": "HK22C - GB 15.1 ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "500/1000/1500 シアエア・マイクロパッド", "coreName": "Centrex Symmetrical Mass Bias", "coreType": "非対称コア", "rg": 2.466, "diff": 0.056, "mb": 0.027, "diffClass": "かなり高い", "memo": "転がり出し早め / フレア大・曲がり強め / 非対称の向き変わり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": null, "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 4}, {"releaseMonth": "2026-03", "brand": "Storm", "ballName": "Ion Max Pearl", "coverName": "NRG パール", "coverType": "パール・リアクティブ", "finish": "パワーエッジ仕上げ", "coreName": "Element Max A.I.", "coreType": "非対称コア", "rg": 2.47, "diff": 0.055, "mb": 0.014, "diffClass": "かなり高い", "memo": "転がり出し早め / フレア大・曲がり強め / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowwwl.com/sites/default/files/styles/ball_image_main/public/balls/storm-ion-max-pearl.png", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 4}, {"releaseMonth": "2026-03", "brand": "Roto Grip", "ballName": "Gremlin Tour-X", "coverName": "V-R1 ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "4000 アブラロン", "coreName": "Rondure Tour-X", "coreType": "非対称コア", "rg": 2.48, "diff": 0.034, "mb": 0.011, "diffClass": "中間", "memo": "転がり出し早め / 扱いやすい / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18065.jpg", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 2}, {"releaseMonth": "2026-03", "brand": "Columbia 300", "ballName": "Pulse Hybrid", "coverName": "Hyperflex ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "500/1000/2000 シアエア・マイクロパッド", "coreName": "Pulse PowerCOR", "coreType": "対称コア", "rg": 2.468, "diff": 0.045, "mb": null, "diffClass": "高め", "memo": "転がり出し早め / 曲がり幅あり", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://columbia300.com/cdn/shop/files/Pulse_1600x1707_website_7f1ddd34-6bd1-4f83-852f-c0a9e712d8f1.png?v=1749232483", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 3}, {"releaseMonth": "2026-02", "brand": "Storm", "ballName": "Bionic", "coverName": "NRG ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "4000 アブラロン", "coreName": "Torsion A.I.", "coreType": "対称コア", "rg": 2.47, "diff": 0.05, "mb": null, "diffClass": "高め", "memo": "転がり出し早め / 曲がり幅あり", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowwwl.com/sites/default/files/styles/ball_image_main/public/balls/storm-bionic.png", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 3}, {"releaseMonth": "2026-02", "brand": "Storm", "ballName": "Concept", "coverName": "ARC パール", "coverType": "パール・リアクティブ", "finish": "1000 アブラロン", "coreName": "Radius", "coreType": "対称コア", "rg": 2.61, "diff": 0.02, "mb": null, "diffClass": "低め", "memo": "手前が走りやすく奥まで行きやすい / 曲がり控えめ", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18001.jpg", "rgClass": "遅い", "rgLevel": 5, "diffLevel": 1}, {"releaseMonth": "2026-02", "brand": "Brunswick", "ballName": "Combat Hybrid", "coverName": "Alpha Premier ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "500/2000 シアエア・マイクロパッド", "coreName": "Rampart", "coreType": "非対称コア", "rg": 2.502, "diff": 0.051, "mb": 0.019, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり / 非対称の向き変わり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://brunswickbowling.nyc3.cdn.digitaloceanspaces.com/production/transforms/bowlerproducts/Products/Balls/Pro/808938/Combat_Hybrid_1600x1600_18694ddcf445590f9b69434f3e02c496.png", "rgClass": "早め", "rgLevel": 2, "diffLevel": 3}, {"releaseMonth": "2026-02", "brand": "Brunswick", "ballName": "Crown Victory Pearl", "coverName": "HK22 - Savvy Hook パール", "coverType": "パール・リアクティブ", "finish": "500/1000/1500 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Tiered Hexagon", "coreType": "対称コア", "rg": 2.54, "diff": 0.045, "mb": null, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://brunswickbowling.nyc3.cdn.digitaloceanspaces.com/production/bowler_products/Products/Balls/Advanced/Crown_Victory_Pearl_1600x1600.png", "rgClass": "標準", "rgLevel": 3, "diffLevel": 3}, {"releaseMonth": "2026-02", "brand": "Columbia 300", "ballName": "Piranha Solid", "coverName": "Hyperflex", "coverType": "ソリッド・リアクティブ", "finish": "500/1500 シアエア・マイクロパッド", "coreName": "Piranha", "coreType": "対称コア", "rg": 2.554, "diff": 0.043, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://columbia300.com/cdn/shop/files/Piranha_Solid_1600x1707_website.png?v=1766428092", "rgClass": "やや遅め", "rgLevel": 4, "diffLevel": 2}, {"releaseMonth": "2026-02", "brand": "Track", "ballName": "Stealth Mode Hybrid", "coverName": "HK22C - Super Response ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "500/1000/1500 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Stealth", "coreType": "対称コア", "rg": 2.482, "diff": 0.056, "mb": null, "diffClass": "かなり高い", "memo": "標準〜中間 / フレア大・曲がり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18070.jpg", "rgClass": "早め", "rgLevel": 2, "diffLevel": 4}, {"releaseMonth": "2026-02", "brand": "Track", "ballName": "Synthesis", "coverName": "HK22C - QR-12 ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "500/1500 シアエア・マイクロパッド", "coreName": "I-Core 4.0", "coreType": "非対称コア", "rg": 2.48, "diff": 0.053, "mb": 0.02, "diffClass": "高め", "memo": "転がり出し早め / 曲がり幅あり / 非対称の向き変わり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18069.jpg", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 3}, {"releaseMonth": "2026-02", "brand": "SWAG", "ballName": "Dragon Midnight Poly", "coverName": "ポリエステル", "coverType": "ポリエステル", "finish": "ポリッシュ仕上げ", "coreName": "Sphere", "coreType": "対称コア", "rg": 2.69, "diff": 0.006, "mb": null, "diffClass": "低め", "memo": "手前が走りやすく奥まで行きやすい / 曲がり控えめ / スペア向け", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.swagbowling.com/wp-content/uploads/2026/02/swag-black-dragon-midnight-poly-600-jan2026.jpg", "rgClass": "遅い", "rgLevel": 5, "diffLevel": 1}, {"releaseMonth": "2026-02", "brand": "SWAG", "ballName": "Dragon Cotton Candy Poly", "coverName": "ポリエステル", "coverType": "ポリエステル", "finish": "ポリッシュ仕上げ", "coreName": "Sphere", "coreType": "対称コア", "rg": 2.69, "diff": 0.006, "mb": null, "diffClass": "低め", "memo": "手前が走りやすく奥まで行きやすい / 曲がり控えめ / スペア向け", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.swagbowling.com/wp-content/uploads/2026/02/swag-dragon-cotton-candy-poly-600-jan2026.jpg", "rgClass": "遅い", "rgLevel": 5, "diffLevel": 1}, {"releaseMonth": "2026-02", "brand": "SWAG", "ballName": "Serpent Hybrid", "coverName": "Serum AP26", "coverType": "ハイブリッド・リアクティブ", "finish": "4000 アブラロン", "coreName": "Serpent", "coreType": "非対称コア", "rg": 2.51, "diff": 0.048, "mb": 0.016, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.swagbowling.com/wp-content/uploads/2026/02/SWAG-Serpent-600-dec2025.jpg", "rgClass": "早め", "rgLevel": 2, "diffLevel": 3}, {"releaseMonth": "2026-02", "brand": "SWAG", "ballName": "Judgement Hybrid", "coverName": "Slayer AP26 ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "3000 アブラロン", "coreName": "Guillotine", "coreType": "非対称コア", "rg": 2.51, "diff": 0.052, "mb": 0.017, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.swagbowling.com/wp-content/uploads/2026/02/SWAG-Judgement-ball-600-dec2025.jpg", "rgClass": "早め", "rgLevel": 2, "diffLevel": 3}, {"releaseMonth": "2026-02", "brand": "SWAG", "ballName": "Assassin Pearl", "coverName": "Dagger AP26 パール", "coverType": "パール・リアクティブ", "finish": "1500 アブラロン", "coreName": "Assassin", "coreType": "対称コア", "rg": 2.52, "diff": 0.048, "mb": null, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.swagbowling.com/wp-content/uploads/2026/02/SWAG-Assassin-Pearl-ball-600-dec2025.jpg", "rgClass": "標準", "rgLevel": 3, "diffLevel": 3}, {"releaseMonth": "2026-02", "brand": "SWAG", "ballName": "Craze Tour Pearl", "coverName": "Rage AP26 パール", "coverType": "パール・リアクティブ", "finish": "500 ポリッシュ仕上げ", "coreName": "Craze", "coreType": "対称コア", "rg": 2.52, "diff": 0.03, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.swagbowling.com/wp-content/uploads/2026/02/swag-craze-tour-pearl-ball-600-dec2025.jpg", "rgClass": "標準", "rgLevel": 3, "diffLevel": 2}, {"releaseMonth": "2026-02", "brand": "SWAG", "ballName": "Craze Tour Solid", "coverName": "Rage AP26 ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "4000 アブラロン", "coreName": "Craze", "coreType": "対称コア", "rg": 2.52, "diff": 0.03, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.swagbowling.com/wp-content/uploads/2026/02/swag-craze-tour-solid-ball-600-dec2025.jpg", "rgClass": "標準", "rgLevel": 3, "diffLevel": 2}, {"releaseMonth": "2026-02", "brand": "SWAG", "ballName": "Unreal Solid", "coverName": "Never Quit AP26 ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "3000 アブラロン", "coreName": "Unreal", "coreType": "対称コア", "rg": 2.51, "diff": 0.047, "mb": null, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.swagbowling.com/wp-content/uploads/2026/02/swag-unreal-solid-ball-600-dec2025.jpg", "rgClass": "早め", "rgLevel": 2, "diffLevel": 3}, {"releaseMonth": "2026-02", "brand": "SWAG", "ballName": "Dragon Stained Glass Poly", "coverName": "ポリエステル", "coverType": "ポリエステル", "finish": "ポリッシュ仕上げ", "coreName": "Sphere", "coreType": "対称コア", "rg": 2.69, "diff": 0.006, "mb": null, "diffClass": "低め", "memo": "手前が走りやすく奥まで行きやすい / 曲がり控えめ / スペア向け", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.swagbowling.com/wp-content/uploads/2026/02/swag-dragon-stained-glass-v2-600-jan2026.jpg", "rgClass": "遅い", "rgLevel": 5, "diffLevel": 1}, {"releaseMonth": "2026-02", "brand": "Radical", "ballName": "Deep Impact", "coverName": "HK22C+ ハイブリッド", "coverType": "ハイブリッド・リアクティブ", "finish": "500/2000 シアエア・マイクロパッド", "coreName": "Modified Torpedo", "coreType": "非対称コア", "rg": 2.48, "diff": 0.052, "mb": 0.019, "diffClass": "高め", "memo": "転がり出し早め / 曲がり幅あり / 非対称の向き変わり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18038.jpg", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 3}, {"releaseMonth": "2026-02", "brand": "Motiv", "ballName": "Evoke Mayhem", "coverName": "Propulsion MXV (Maximum Versatility) ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "2000 LSS", "coreName": "Overload", "coreType": "非対称コア", "rg": 2.48, "diff": 0.05, "mb": 0.015, "diffClass": "高め", "memo": "転がり出し早め / 曲がり幅あり / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/18000.jpg", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 3}, {"releaseMonth": "2026-01", "brand": "Roto Grip", "ballName": "Hustle BP (Black/Pink)", "coverName": "VTC パール", "coverType": "パール・リアクティブ", "finish": "1500 ポリッシュ仕上げ", "coreName": "Hustle", "coreType": "対称コア", "rg": 2.53, "diff": 0.03, "mb": null, "diffClass": "中間", "memo": "標準〜中間 / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": null, "rgClass": "標準", "rgLevel": 3, "diffLevel": 2}, {"releaseMonth": "2026-01", "brand": "Storm", "ballName": "Absolute Reign", "coverName": "R2S DEEP ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "パワーエッジ仕上げ", "coreName": "Sentinel", "coreType": "非対称コア", "rg": 2.48, "diff": 0.05, "mb": 0.021, "diffClass": "高め", "memo": "転がり出し早め / 曲がり幅あり / 非対称の向き変わり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowwwl.com/sites/default/files/styles/ball_image_main/public/balls/storm-absolute-reign.png", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 3}, {"releaseMonth": "2026-01", "brand": "900 Global", "ballName": "Vengeance", "coverName": "Reserve Blend 91 ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "2000 アブラロン", "coreName": "Blast A.I.", "coreType": "対称コア", "rg": 2.47, "diff": 0.055, "mb": null, "diffClass": "かなり高い", "memo": "転がり出し早め / フレア大・曲がり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/17991.jpg", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 4}, {"releaseMonth": "2026-01", "brand": "Roto Grip", "ballName": "Transformer", "coverName": "V-R1 ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "4000 アブラロン", "coreName": "Morph-Wing", "coreType": "非対称コア", "rg": 2.51, "diff": 0.051, "mb": 0.015, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/17990.jpg", "rgClass": "早め", "rgLevel": 2, "diffLevel": 3}, {"releaseMonth": "2026-01", "brand": "Storm", "ballName": "Virtual Gravity Destino", "coverName": "A1S パール", "coverType": "パール・リアクティブ", "finish": "パワーエッジ仕上げ", "coreName": "Shape-Lock HD A.I.", "coreType": "非対称コア", "rg": 2.47, "diff": 0.054, "mb": 0.021, "diffClass": "高め", "memo": "転がり出し早め / 曲がり幅あり / 非対称の向き変わり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowwwl.com/sites/default/files/styles/ball_image_main/public/balls/storm-virtual-gravity-destino.png", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 3}, {"releaseMonth": "2026-01", "brand": "900 Global", "ballName": "Honey Badger U78", "coverName": "Reserve Blend ウレタン ソリッド", "coverType": "ソリッド・ウレタン", "finish": "パワーエッジ仕上げ", "coreName": "Grapnel 2.0 A.I.", "coreType": "非対称コア", "rg": 2.53, "diff": 0.05, "mb": 0.013, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり / 非対称コア / 短め・高摩擦レーンで制御しやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": null, "rgClass": "標準", "rgLevel": 3, "diffLevel": 3}, {"releaseMonth": "2026-01", "brand": "DV8", "ballName": "Dark Side Curse", "coverName": "Inciter ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "500/1000/1500 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Duality", "coreType": "対称コア", "rg": 2.48, "diff": 0.036, "mb": null, "diffClass": "中間", "memo": "転がり出し早め / 扱いやすい", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://dv8bowling.nyc3.cdn.digitaloceanspaces.com/production/bowler_products/Products/Balls/DV8/SSSS/Dark_Side_Curse_1600x1600.png", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 2}, {"releaseMonth": "2026-01", "brand": "Ebonite", "ballName": "Spartan", "coverName": "HK22C2 - Optimize ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "500/1500 シアエア・マイクロパッド", "coreName": "Iron Fist V2", "coreType": "非対称コア", "rg": 2.473, "diff": 0.053, "mb": 0.019, "diffClass": "高め", "memo": "転がり出し早め / 曲がり幅あり / 非対称の向き変わり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/17998.jpg", "rgClass": "かなり早い", "rgLevel": 1, "diffLevel": 3}, {"releaseMonth": "2026-01", "brand": "Hammer", "ballName": "Black Widow 3.0 Dynasty", "coverName": "HK22C - Cohesion ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "500/1000/2000 シアエア・マイクロパッド", "coreName": "Gas Mask", "coreType": "非対称コア", "rg": 2.5, "diff": 0.058, "mb": 0.016, "diffClass": "かなり高い", "memo": "標準〜中間 / フレア大・曲がり強め / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://hammerbowling.com/cdn/shop/files/Black_Widow_3_0_Dynasty_1600x1707_website.png", "rgClass": "早め", "rgLevel": 2, "diffLevel": 4}, {"releaseMonth": "2026-01", "brand": "Hammer", "ballName": "Hammerhead Pearl", "coverName": "HK22 - Aggressive パール", "coverType": "パール・リアクティブ", "finish": "500/1000/1500 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Spheroid (2025)", "coreType": "対称コア", "rg": 2.481, "diff": 0.048, "mb": null, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://hammerbowling.com/cdn/shop/files/Hammerhead_Pearl_1600x1600_71c42bf4-c9b0-40ec-bfec-3c33d60afe24.png", "rgClass": "早め", "rgLevel": 2, "diffLevel": 3}, {"releaseMonth": "2026-01", "brand": "Radical", "ballName": "Outer Limits Black Hole", "coverName": "HK22C ソリッド", "coverType": "ソリッド・リアクティブ", "finish": "500/1000/1500 シアエア, クラウン・ファクトリー・コンパウンド", "coreName": "Outer Limits", "coreType": "非対称コア", "rg": 2.499, "diff": 0.051, "mb": 0.014, "diffClass": "高め", "memo": "標準〜中間 / 曲がり幅あり / 非対称コア", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/17996.jpg", "rgClass": "早め", "rgLevel": 2, "diffLevel": 3}, {"releaseMonth": "2026-01", "brand": "Motiv", "ballName": "Apex Jackal", "coverName": "Propulsion MXV (Maximum Versatility) パール", "coverType": "パール・リアクティブ", "finish": "5000 LSS", "coreName": "Apex Predator", "coreType": "非対称コア", "rg": 2.52, "diff": 0.055, "mb": 0.02, "diffClass": "かなり高い", "memo": "標準〜中間 / フレア大・曲がり強め / 非対称の向き変わり強め", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://images1.bowlingball.com/images/Product/medium/17992.jpg", "rgClass": "標準", "rgLevel": 3, "diffLevel": 4}, {"releaseMonth": "2026-01", "brand": "Storm", "ballName": "Clear Storm Teal", "coverName": "Ultra Clear ポリエステル", "coverType": "ポリエステル", "finish": "3500 ポリッシュ仕上げ", "coreName": "Hex", "coreType": "対称コア", "rg": 2.66, "diff": 0.018, "mb": null, "diffClass": "低め", "memo": "手前が走りやすく奥まで行きやすい / 曲がり控えめ / スペア向け", "sourceUrl": "https://www.bowwwl.com/bowling-ball-database", "imageUrl": "https://www.bowwwl.com/sites/default/files/styles/ball_image_main/public/balls/storm-clear-storm-teal.png", "rgClass": "遅い", "rgLevel": 5, "diffLevel": 1}];
+
+const state = {
+  keyword: "",
+  brands: new Set(),
+  months: new Set(),
+  covers: new Set(),
+  cores: new Set(),
+  rgMin: null, rgMax: null,
+  diffMin: null, diffMax: null,
+  sort: "month-desc"
+};
+
+function uniqueSorted(key){
+  return [...new Set(BALLS.map(b => b[key]).filter(Boolean))].sort();
+}
+
+function monthLabel(m){
+  const [y, mo] = m.split("-");
+  return `${y}年${parseInt(mo,10)}月`;
+}
+
+function buildChips(containerId, values, set, labelFn){
+  const el = document.getElementById(containerId);
+  el.innerHTML = "";
+  values.forEach(v => {
+    const chip = document.createElement("div");
+    chip.className = "chip";
+    chip.textContent = labelFn ? labelFn(v) : v;
+    chip.dataset.value = v;
+    chip.addEventListener("click", () => {
+      if(set.has(v)){ set.delete(v); chip.classList.remove("active"); }
+      else{ set.add(v); chip.classList.add("active"); }
+      render();
+    });
+    el.appendChild(chip);
+  });
+}
+
+function resetChips(containerId){
+  document.querySelectorAll(`#${containerId} .chip`).forEach(c => c.classList.remove("active"));
+}
+
+const rgVals = BALLS.map(b => b.rg).filter(v => v != null);
+const diffVals = BALLS.map(b => b.diff).filter(v => v != null);
+const RG_MIN = Math.min(...rgVals), RG_MAX = Math.max(...rgVals);
+const DIFF_MIN = Math.min(...diffVals), DIFF_MAX = Math.max(...diffVals);
+
+function initFilters(){
+  buildChips("brandChips", uniqueSorted("brand"), state.brands);
+  buildChips("monthChips", uniqueSorted("releaseMonth"), state.months, monthLabel);
+  buildChips("coverChips", uniqueSorted("coverType"), state.covers);
+  buildChips("coreChips", uniqueSorted("coreType"), state.cores);
+
+  document.getElementById("rgMin").value = RG_MIN;
+  document.getElementById("rgMax").value = RG_MAX;
+  document.getElementById("diffMin").value = DIFF_MIN;
+  document.getElementById("diffMax").value = DIFF_MAX;
+  state.rgMin = RG_MIN; state.rgMax = RG_MAX;
+  state.diffMin = DIFF_MIN; state.diffMax = DIFF_MAX;
+
+  document.getElementById("keyword").addEventListener("input", e => {
+    state.keyword = e.target.value.trim().toLowerCase();
+    render();
+  });
+
+  ["rgMin","rgMax","diffMin","diffMax"].forEach(id => {
+    document.getElementById(id).addEventListener("input", e => {
+      const v = e.target.value === "" ? null : parseFloat(e.target.value);
+      state[id] = v;
+      render();
+    });
+  });
+
+  document.getElementById("sortSelect").addEventListener("change", e => {
+    state.sort = e.target.value;
+    render();
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    state.keyword = "";
+    state.brands.clear(); state.months.clear(); state.covers.clear(); state.cores.clear();
+    document.getElementById("keyword").value = "";
+    resetChips("brandChips"); resetChips("monthChips"); resetChips("coverChips"); resetChips("coreChips");
+    document.getElementById("rgMin").value = RG_MIN;
+    document.getElementById("rgMax").value = RG_MAX;
+    document.getElementById("diffMin").value = DIFF_MIN;
+    document.getElementById("diffMax").value = DIFF_MAX;
+    state.rgMin = RG_MIN; state.rgMax = RG_MAX;
+    state.diffMin = DIFF_MIN; state.diffMax = DIFF_MAX;
+    state.sort = "month-desc";
+    document.getElementById("sortSelect").value = "month-desc";
+    render();
+  });
+}
+
+function matches(b){
+  if(state.keyword){
+    const hay = [b.ballName, b.brand, b.coverName, b.coreName, b.memo].join(" ").toLowerCase();
+    if(!hay.includes(state.keyword)) return false;
+  }
+  if(state.brands.size && !state.brands.has(b.brand)) return false;
+  if(state.months.size && !state.months.has(b.releaseMonth)) return false;
+  if(state.covers.size && !state.covers.has(b.coverType)) return false;
+  if(state.cores.size && !state.cores.has(b.coreType)) return false;
+  if(b.rg != null){
+    if(state.rgMin != null && b.rg < state.rgMin) return false;
+    if(state.rgMax != null && b.rg > state.rgMax) return false;
+  }
+  if(b.diff != null){
+    if(state.diffMin != null && b.diff < state.diffMin) return false;
+    if(state.diffMax != null && b.diff > state.diffMax) return false;
+  }
+  return true;
+}
+
+function sortBalls(list){
+  const arr = [...list];
+  switch(state.sort){
+    case "month-desc": arr.sort((a,b)=> b.releaseMonth.localeCompare(a.releaseMonth)); break;
+    case "month-asc": arr.sort((a,b)=> a.releaseMonth.localeCompare(b.releaseMonth)); break;
+    case "diff-desc": arr.sort((a,b)=> (b.diff??-1) - (a.diff??-1)); break;
+    case "diff-asc": arr.sort((a,b)=> (a.diff??999) - (b.diff??999)); break;
+    case "rg-asc": arr.sort((a,b)=> (a.rg??999) - (b.rg??999)); break;
+    case "rg-desc": arr.sort((a,b)=> (b.rg??-1) - (a.rg??-1)); break;
+    case "name-asc": arr.sort((a,b)=> a.ballName.localeCompare(b.ballName)); break;
+  }
+  return arr;
+}
+
+function escAttr(s){
+  return String(s).replace(/"/g, "&quot;");
+}
+
+const RG_COLORS = ['#2563eb', '#0891b2', '#059669', '#d97706', '#dc2626'];
+const DIFF_COLORS = ['#2563eb', '#059669', '#d97706', '#dc2626'];
+
+function stageBar(level, max, colors){
+  const color = level ? (colors[level - 1] || '#94a3b8') : '#cbd5e1';
+  let segs = '';
+  for(let i = 1; i <= max; i++){
+    const filled = level && i <= level;
+    segs += `<span class="stage-seg" style="background:${filled ? color : '#e2e8f0'}"></span>`;
+  }
+  return `<div class="stage-bar">${segs}</div>`;
+}
+
+function card(b){
+  const rg = b.rg != null ? b.rg.toFixed(3) : "—";
+  const diff = b.diff != null ? b.diff.toFixed(3) : "—";
+  const mb = b.mb != null ? b.mb.toFixed(3) : "—";
+  const noImgHtml = '<div class="card-img noimg"><span class="icon">🎳</span><span class="txt">画像なし</span></div>';
+  let imgHtml;
+  if(b.imageUrl){
+    const escUrl = escAttr(b.imageUrl);
+    const escName = escAttr(b.ballName);
+    const safeNoImg = noImgHtml.replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+    imgHtml = '<div class="card-img"><img src="' + escUrl + '" alt="' + escName + '" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.outerHTML=\'' + safeNoImg + '\'"></div>';
+  } else {
+    imgHtml = noImgHtml;
+  }
+  return `
+  <div class="card">
+    ${imgHtml}
+    <div class="card-top">
+      <div>
+        <div class="card-brand">${b.brand}</div>
+        <div class="card-name">${b.ballName}</div>
+      </div>
+      <span class="badge ${b.diffClass}">${b.diffClass}</span>
+    </div>
+    <div class="meta-row">発売: ${monthLabel(b.releaseMonth)}</div>
+    <div class="cover-line"><b>カバー:</b> ${b.coverName}（${b.coverType}）</div>
+    <div class="cover-line"><b>コア:</b> ${b.coreName}　<span class="core-tag">${b.coreType}</span></div>
+    <div class="stage-wrap">
+      <div class="stage-block">
+        <div class="stage-head"><span>RG（転がり出し）</span><span class="stage-val">${rg}</span></div>
+        ${stageBar(b.rgLevel, 5, RG_COLORS)}
+        <div class="stage-foot"><span>早い</span><span class="stage-tag">${b.rgClass || "—"}</span><span>遅い</span></div>
+      </div>
+      <div class="stage-block">
+        <div class="stage-head"><span>Diff（曲がり幅）</span><span class="stage-val">${diff}</span></div>
+        ${stageBar(b.diffLevel, 4, DIFF_COLORS)}
+        <div class="stage-foot"><span>小さい</span><span class="stage-tag">${b.diffClass || "—"}</span><span>大きい</span></div>
+      </div>
+      <div class="mb-row">MB（非対称差）: <b>${mb}</b></div>
+    </div>
+    <div class="memo">${b.memo || ""}</div>
+    <div class="card-foot">
+      <span></span>
+      <a class="src-link" href="${b.sourceUrl}" target="_blank" rel="noopener">出典を見る →</a>
+    </div>
+  </div>`;
+}
+
+function render(){
+  const filtered = sortBalls(BALLS.filter(matches));
+  document.getElementById("resultCount").textContent = filtered.length;
+  document.getElementById("totalCount").textContent = BALLS.length;
+  const grid = document.getElementById("grid");
+  const empty = document.getElementById("emptyMsg");
+  if(filtered.length === 0){
+    grid.innerHTML = "";
+    empty.style.display = "block";
+  } else {
+    empty.style.display = "none";
+    grid.innerHTML = filtered.map(card).join("");
+  }
+}
+
+initFilters();
+render();
+</script>
+</body>
+</html>
