@@ -48,9 +48,6 @@
     padding:0 20px 40px;
     align-items:start;
   }
-  @media (max-width:880px){
-    .layout{grid-template-columns:1fr;}
-  }
   .panel{
     background:var(--panel);
     border:1px solid var(--line);
@@ -65,6 +62,89 @@
     gap:18px;
     max-height:calc(100vh - 32px);
     overflow-y:auto;
+  }
+  .filter-toggle{
+    display:none;
+  }
+  .filter-body{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+  }
+  .filter-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:1.4rem;
+    height:1.4rem;
+    padding:0 6px;
+    border-radius:999px;
+    background:var(--accent);
+    color:#fff;
+    font-size:0.72rem;
+    font-weight:700;
+  }
+  .filter-badge[hidden]{display:none;}
+  @media (max-width:880px){
+    header{padding:16px 16px 14px;}
+    header h1{font-size:1.15rem;}
+    header p{
+      font-size:0.78rem;
+      display:-webkit-box;
+      -webkit-line-clamp:2;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+    }
+    .layout{
+      grid-template-columns:1fr;
+      margin:12px auto;
+      padding:0 12px 24px;
+      gap:12px;
+    }
+    .filters{
+      position:static;
+      max-height:none;
+      overflow:visible;
+      gap:10px;
+      padding:12px;
+    }
+    .filter-toggle{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      width:100%;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius:8px;
+      background:var(--accent-soft);
+      color:var(--accent);
+      font-weight:600;
+      font-size:0.88rem;
+      font-family:inherit;
+      cursor:pointer;
+    }
+    .filter-toggle-right{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .filter-chevron{
+      font-size:0.7rem;
+      transition:transform .15s;
+    }
+    .filters.is-open .filter-chevron{transform:rotate(180deg);}
+    .filter-body{
+      display:none;
+      gap:14px;
+      max-height:min(55vh, 380px);
+      overflow-y:auto;
+      padding-right:2px;
+      -webkit-overflow-scrolling:touch;
+    }
+    .filters.is-open .filter-body{display:flex;}
+    .grid{grid-template-columns:1fr;}
+    .toolbar{margin-bottom:12px;}
+    .card-img{aspect-ratio:4/3; max-height:220px;}
   }
   .filters h2{
     font-size:0.95rem;
@@ -341,55 +421,65 @@
 </header>
 
 <div class="layout">
-  <aside class="panel filters">
-    <div class="field">
+  <aside class="panel filters" id="filtersPanel">
+    <div class="field filter-keyword">
       <label class="title">キーワード検索</label>
       <input type="text" id="keyword" placeholder="ボール名・カバー名・コア名など">
     </div>
 
-    <div>
-      <h2>ブランド</h2>
-      <div class="chipgroup" id="brandChips"></div>
-    </div>
+    <button type="button" class="filter-toggle" id="filterToggle" aria-expanded="false" aria-controls="filterBody">
+      <span>詳細な絞り込み</span>
+      <span class="filter-toggle-right">
+        <span class="filter-badge" id="activeFilterCount" hidden>0</span>
+        <span class="filter-chevron" aria-hidden="true">▼</span>
+      </span>
+    </button>
 
-    <div>
-      <h2>発売月</h2>
-      <div class="chipgroup" id="monthChips"></div>
-    </div>
+    <div class="filter-body" id="filterBody">
+      <div>
+        <h2>ブランド</h2>
+        <div class="chipgroup" id="brandChips"></div>
+      </div>
 
-    <div>
-      <h2>カバー種類</h2>
-      <div class="chipgroup" id="coverChips"></div>
-    </div>
+      <div>
+        <h2>発売月</h2>
+        <div class="chipgroup" id="monthChips"></div>
+      </div>
 
-    <div>
-      <h2>コア種別</h2>
-      <div class="chipgroup" id="coreChips"></div>
-    </div>
+      <div>
+        <h2>カバー種類</h2>
+        <div class="chipgroup" id="coverChips"></div>
+      </div>
 
-    <div>
-      <h2>RG（転がり出し）</h2>
-      <div class="field">
-        <div class="range-row">
-          <input type="number" step="0.001" id="rgMin">
-          <span>〜</span>
-          <input type="number" step="0.001" id="rgMax">
+      <div>
+        <h2>コア種別</h2>
+        <div class="chipgroup" id="coreChips"></div>
+      </div>
+
+      <div>
+        <h2>RG（転がり出し）</h2>
+        <div class="field">
+          <div class="range-row">
+            <input type="number" step="0.001" id="rgMin">
+            <span>〜</span>
+            <input type="number" step="0.001" id="rgMax">
+          </div>
         </div>
       </div>
-    </div>
 
-    <div>
-      <h2>Diff（曲がり幅）</h2>
-      <div class="field">
-        <div class="range-row">
-          <input type="number" step="0.001" id="diffMin">
-          <span>〜</span>
-          <input type="number" step="0.001" id="diffMax">
+      <div>
+        <h2>Diff（曲がり幅）</h2>
+        <div class="field">
+          <div class="range-row">
+            <input type="number" step="0.001" id="diffMin">
+            <span>〜</span>
+            <input type="number" step="0.001" id="diffMax">
+          </div>
         </div>
       </div>
-    </div>
 
-    <button class="reset-btn" id="resetBtn">条件をリセット</button>
+      <button class="reset-btn" id="resetBtn">条件をリセット</button>
+    </div>
   </aside>
 
   <main>
@@ -510,6 +600,22 @@ function initFilters(){
     document.getElementById("sortSelect").value = "month-desc";
     render();
   });
+
+  const panel = document.getElementById("filtersPanel");
+  const toggle = document.getElementById("filterToggle");
+  toggle.addEventListener("click", () => {
+    const open = panel.classList.toggle("is-open");
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+}
+
+function activeFilterCount(){
+  let n = state.brands.size + state.months.size + state.covers.size + state.cores.size;
+  if(state.rgMin != null && state.rgMin > RG_MIN) n++;
+  if(state.rgMax != null && state.rgMax < RG_MAX) n++;
+  if(state.diffMin != null && state.diffMin > DIFF_MIN) n++;
+  if(state.diffMax != null && state.diffMax < DIFF_MAX) n++;
+  return n;
 }
 
 function matches(b){
@@ -615,6 +721,14 @@ function render(){
   const filtered = sortBalls(BALLS.filter(matches));
   document.getElementById("resultCount").textContent = filtered.length;
   document.getElementById("totalCount").textContent = BALLS.length;
+  const badge = document.getElementById("activeFilterCount");
+  const active = activeFilterCount();
+  if(active > 0){
+    badge.textContent = active;
+    badge.hidden = false;
+  } else {
+    badge.hidden = true;
+  }
   const grid = document.getElementById("grid");
   const empty = document.getElementById("emptyMsg");
   if(filtered.length === 0){
