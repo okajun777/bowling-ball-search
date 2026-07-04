@@ -458,7 +458,9 @@
 
       <div>
         <h2>RG（転がり出し）</h2>
-        <div class="field">
+        <div class="chipgroup" id="rgChips"></div>
+        <div class="field" style="margin-top:10px;">
+          <label class="title">数値で指定</label>
           <div class="range-row">
             <input type="number" step="0.001" id="rgMin">
             <span>〜</span>
@@ -469,7 +471,9 @@
 
       <div>
         <h2>Diff（曲がり幅）</h2>
-        <div class="field">
+        <div class="chipgroup" id="diffChips"></div>
+        <div class="field" style="margin-top:10px;">
+          <label class="title">数値で指定</label>
           <div class="range-row">
             <input type="number" step="0.001" id="diffMin">
             <span>〜</span>
@@ -514,13 +518,23 @@ const state = {
   months: new Set(),
   covers: new Set(),
   cores: new Set(),
+  rgClasses: new Set(),
+  diffClasses: new Set(),
   rgMin: null, rgMax: null,
   diffMin: null, diffMax: null,
   sort: "month-desc"
 };
 
+const RG_CLASS_ORDER = ["かなり早い", "早め", "標準", "やや遅め", "遅い"];
+const DIFF_CLASS_ORDER = ["低め", "中間", "高め", "かなり高い"];
+
 function uniqueSorted(key){
   return [...new Set(BALLS.map(b => b[key]).filter(Boolean))].sort();
+}
+
+function uniqueInOrder(key, order){
+  const present = new Set(BALLS.map(b => b[key]).filter(Boolean));
+  return order.filter(v => present.has(v));
 }
 
 function monthLabel(m){
@@ -559,6 +573,8 @@ function initFilters(){
   buildChips("monthChips", uniqueSorted("releaseMonth"), state.months, monthLabel);
   buildChips("coverChips", uniqueSorted("coverType"), state.covers);
   buildChips("coreChips", uniqueSorted("coreType"), state.cores);
+  buildChips("rgChips", uniqueInOrder("rgClass", RG_CLASS_ORDER), state.rgClasses);
+  buildChips("diffChips", uniqueInOrder("diffClass", DIFF_CLASS_ORDER), state.diffClasses);
 
   document.getElementById("rgMin").value = RG_MIN;
   document.getElementById("rgMax").value = RG_MAX;
@@ -588,8 +604,10 @@ function initFilters(){
   document.getElementById("resetBtn").addEventListener("click", () => {
     state.keyword = "";
     state.brands.clear(); state.months.clear(); state.covers.clear(); state.cores.clear();
+    state.rgClasses.clear(); state.diffClasses.clear();
     document.getElementById("keyword").value = "";
     resetChips("brandChips"); resetChips("monthChips"); resetChips("coverChips"); resetChips("coreChips");
+    resetChips("rgChips"); resetChips("diffChips");
     document.getElementById("rgMin").value = RG_MIN;
     document.getElementById("rgMax").value = RG_MAX;
     document.getElementById("diffMin").value = DIFF_MIN;
@@ -610,7 +628,8 @@ function initFilters(){
 }
 
 function activeFilterCount(){
-  let n = state.brands.size + state.months.size + state.covers.size + state.cores.size;
+  let n = state.brands.size + state.months.size + state.covers.size + state.cores.size
+    + state.rgClasses.size + state.diffClasses.size;
   if(state.rgMin != null && state.rgMin > RG_MIN) n++;
   if(state.rgMax != null && state.rgMax < RG_MAX) n++;
   if(state.diffMin != null && state.diffMin > DIFF_MIN) n++;
@@ -627,6 +646,8 @@ function matches(b){
   if(state.months.size && !state.months.has(b.releaseMonth)) return false;
   if(state.covers.size && !state.covers.has(b.coverType)) return false;
   if(state.cores.size && !state.cores.has(b.coreType)) return false;
+  if(state.rgClasses.size && !state.rgClasses.has(b.rgClass)) return false;
+  if(state.diffClasses.size && !state.diffClasses.has(b.diffClass)) return false;
   if(b.rg != null){
     if(state.rgMin != null && b.rg < state.rgMin) return false;
     if(state.rgMax != null && b.rg > state.rgMax) return false;
