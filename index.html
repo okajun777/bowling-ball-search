@@ -298,8 +298,17 @@
     margin:2px 0 0;
     line-height:1.3;
   }
+  .badge-stack{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:4px;
+    flex-shrink:0;
+  }
   .badge{
-    display:inline-block;
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
     padding:3px 9px;
     border-radius:999px;
     font-size:0.72rem;
@@ -307,10 +316,20 @@
     color:#fff;
     white-space:nowrap;
   }
+  .badge .badge-label{
+    font-size:0.62rem;
+    font-weight:600;
+    opacity:.9;
+  }
   .badge.低め{background:var(--low);}
   .badge.中間{background:var(--mid);}
   .badge.高め{background:var(--high);}
   .badge.かなり高い{background:var(--vhigh);}
+  .badge.かなり早い{background:var(--low);}
+  .badge.早め{background:#0891b2;}
+  .badge.標準{background:var(--mid);}
+  .badge.やや遅め{background:var(--high);}
+  .badge.遅い{background:var(--vhigh);}
   .meta-row{
     font-size:0.8rem;
     color:var(--sub);
@@ -712,7 +731,10 @@ function card(b){
         <div class="card-brand">${b.brand}</div>
         <div class="card-name">${b.ballName}</div>
       </div>
-      <span class="badge ${b.diffClass}">${b.diffClass}</span>
+      <div class="badge-stack">
+        <span class="badge ${b.rgClass || ""}"><span class="badge-label">RG</span>${b.rgClass || "—"}</span>
+        <span class="badge ${b.diffClass || ""}"><span class="badge-label">Diff</span>${b.diffClass || "—"}</span>
+      </div>
     </div>
     <div class="meta-row">発売: ${monthLabel(b.releaseMonth)}</div>
     <div class="cover-line"><b>カバー:</b> ${b.coverName}（${b.coverType}）</div>
